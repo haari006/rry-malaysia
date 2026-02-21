@@ -1,5 +1,6 @@
 import ScrapCalculator from '@/components/ScrapCalculator'
 import { client } from '@/sanity/lib/client'
+import { COMPANY_INFO } from '@/lib/company'
 
 async function getData() {
     return client.fetch(`
@@ -22,7 +23,7 @@ export const revalidate = 3600 // Revalidate every hour
 
 export default async function ScrapCalculatorPage() {
     const { rates, companyInfo } = await getData()
-    const whatsappNumber = companyInfo?.whatsapp || '60123456789'
+    const whatsappNumber = companyInfo?.whatsapp || COMPANY_INFO.whatsappNumber
 
     return (
         <div className="bg-gray-50 min-h-screen py-16">

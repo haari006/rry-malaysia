@@ -131,11 +131,11 @@ const services = [
 // Company Info Data (from previous migration)
 const companyInfo = {
   _type: 'companyInfo',
-  name: 'RRY Malaysia',
-  address: 'Kuala Lumpur, Malaysia',
-  phone: '+60 12-345 6789',
-  email: 'contact@rrymalaysia.com',
-  whatsapp: '60123456789',
+  name: 'RRY HARDWARE AND MACHINERY (M) SDN.BHD (1415901-T)',
+  address: 'NO 12, MEDAN SILIBIN, JALAN SILIBIN, 30100 IPOH, PERAK, MALAYSIA',
+  phone: '+60162197447',
+  email: 'rry.malaysia@yahoo.com',
+  whatsapp: '60162197447',
   operatingHours: 'Monday - Friday: 9:00 AM - 6:00 PM',
 }
 

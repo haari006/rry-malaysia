@@ -5,9 +5,10 @@ import ctaSection from './ctaSection'
 import feature from './feature'
 import hero from './hero'
 import { product } from './product'
+import { order } from './order'
 import { scrapRate } from './scrapRate'
 import service from './service'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [service, companyInfo, hero, feature, aboutPage, ctaSection, product, scrapRate],
+  types: [service, companyInfo, hero, feature, aboutPage, ctaSection, product, order, scrapRate],
 }

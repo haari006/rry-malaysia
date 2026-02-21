@@ -1,3 +1,5 @@
+import { COMPANY_INFO } from '@/lib/company'
+
 export default function PrivacyPolicyPage() {
   return (
     <div className="bg-white min-h-screen">
@@ -106,10 +108,10 @@ export default function PrivacyPolicyPage() {
               If you have questions or comments about this Privacy Policy, please contact us at:
             </p>
             <div className="bg-soft-grey p-6 rounded-lg">
-              <p className="text-charcoal font-semibold mb-2">RRY Malaysia</p>
-              <p className="text-deep-grey">Email: contact@rrymalaysia.com</p>
-              <p className="text-deep-grey">Phone: +60 12-345 6789</p>
-              <p className="text-deep-grey">Address: Kuala Lumpur, Malaysia</p>
+              <p className="text-charcoal font-semibold mb-2">{COMPANY_INFO.name}</p>
+              <p className="text-deep-grey">Email: {COMPANY_INFO.email}</p>
+              <p className="text-deep-grey">Phone: {COMPANY_INFO.phone}</p>
+              <p className="text-deep-grey">Address: {COMPANY_INFO.address}</p>
             </div>
           </section>
 

@@ -1,4 +1,5 @@
 import { Clock, Mail, MapPin, Phone } from 'lucide-react'
+import { COMPANY_INFO } from '@/lib/company'
 
 export default function ContactPage() {
   return (
@@ -26,8 +27,7 @@ export default function ContactPage() {
                   </div>
                   <div className="ml-6">
                     <h3 className="text-lg font-bold text-charcoal mb-1">Phone & WhatsApp</h3>
-                    <p className="text-deep-grey">+60 12-345 6789</p>
-                    <p className="text-deep-grey">+60 12-987 6543</p>
+                    <p className="text-deep-grey">{COMPANY_INFO.phone}</p>
                   </div>
                 </div>
 
@@ -37,8 +37,7 @@ export default function ContactPage() {
                   </div>
                   <div className="ml-6">
                     <h3 className="text-lg font-bold text-charcoal mb-1">Email</h3>
-                    <p className="text-deep-grey">contact@rrymalaysia.com</p>
-                    <p className="text-deep-grey">sales@rrymalaysia.com</p>
+                    <p className="text-deep-grey">{COMPANY_INFO.email}</p>
                   </div>
                 </div>
 
@@ -49,10 +48,7 @@ export default function ContactPage() {
                   <div className="ml-6">
                     <h3 className="text-lg font-bold text-charcoal mb-1">Address</h3>
                     <p className="text-deep-grey max-w-xs">
-                      123, Jalan Industri 5,<br />
-                      Kawasan Perindustrian Nilai,<br />
-                      71800 Nilai, Negeri Sembilan,<br />
-                      Malaysia
+                      {COMPANY_INFO.address}
                     </p>
                   </div>
                 </div>

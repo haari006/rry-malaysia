@@ -1,13 +1,11 @@
 'use client'
 
+import { buildWhatsAppLink, COMPANY_INFO } from '@/lib/company'
 import { motion } from 'framer-motion'
 
 export default function FloatingWhatsApp() {
-  // Replace with the actual phone number in international format (without +)
-  // e.g., 60123456789 for Malaysia
-  const phoneNumber = '60123456789' 
   const message = 'Hello, I am interested in your services.'
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+  const whatsappUrl = buildWhatsAppLink(message)
 
   return (
     <motion.a
@@ -20,7 +18,7 @@ export default function FloatingWhatsApp() {
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
       className="fixed bottom-8 right-8 z-50 flex items-center justify-center w-16 h-16 bg-[#25D366] rounded-full shadow-lg hover:shadow-xl transition-shadow duration-300 group"
-      aria-label="Chat on WhatsApp"
+      aria-label={`Chat with ${COMPANY_INFO.name} on WhatsApp`}
     >
       <span className="absolute right-full mr-4 bg-white text-charcoal text-sm font-medium px-3 py-1 rounded-lg shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none">
         Chat with us

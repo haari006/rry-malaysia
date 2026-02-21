@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { COMPANY_INFO } from '@/lib/company'
 
 export default function Footer() {
   return (
@@ -35,9 +36,9 @@ export default function Footer() {
           <div>
             <h3 className="text-charcoal font-bold mb-4">Contact</h3>
             <ul className="space-y-3 text-deep-grey">
-              <li>Kuala Lumpur, Malaysia</li>
-              <li>contact@rrymalaysia.com</li>
-              <li>+60 12-345 6789</li>
+              <li>{COMPANY_INFO.address}</li>
+              <li>{COMPANY_INFO.email}</li>
+              <li>{COMPANY_INFO.phone}</li>
             </ul>
           </div>
         </div>

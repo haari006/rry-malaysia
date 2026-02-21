@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import CartButton from './cart/CartButton'
 
 const navLinks = [
   { name: 'Home', href: '/' },
@@ -44,18 +45,19 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 flex items-center">
-            <Image
-              src="/logo.png"
-              alt="RRY Malaysia Logo"
-              width={120}
-              height={40}
-              className="h-10 w-auto object-contain"
-              priority
-            />
+            <div className="relative h-12 w-[148px] sm:h-14 sm:w-[172px] md:h-16 md:w-[196px] overflow-hidden">
+              <Image
+                src="/logo.png"
+                alt="RRY Malaysia Logo"
+                fill
+                className="object-contain scale-105"
+                priority
+              />
+            </div>
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex items-center space-x-6">
             {navLinks.map((link) => {
               const active = isActive(link.href)
               return (
@@ -77,10 +79,12 @@ export default function Navbar() {
                 </Link>
               )
             })}
+            <CartButton />
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center gap-2">
+            <CartButton />
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-charcoal hover:text-royal-blue transition-colors"

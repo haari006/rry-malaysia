@@ -1,5 +1,6 @@
 import Hero from '@/components/Hero'
 import ServiceCard from '@/components/ServiceCard'
+import ProductActions from '@/components/product/ProductActions'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import { Calculator, Recycle, ShieldCheck, TrendingUp, Truck } from 'lucide-react'
@@ -70,28 +71,39 @@ export default async function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredProducts.length > 0 ? (
               featuredProducts.map((product: any) => (
-                <Link
+                <article
                   key={product._id}
-                  href={`/marketplace/${product.slug}`}
-                  className="group bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                  className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                 >
-                  <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 mb-4">
-                    {product.mainImage && (
-                      <Image
-                        src={urlFor(product.mainImage).url()}
-                        alt={product.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    )}
-                  </div>
-                  <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">
-                    {product.title}
-                  </h3>
-                  <p className="text-blue-600 font-bold">
+                  <Link href={`/marketplace/${product.slug}`} className="block">
+                    <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 mb-4 group">
+                      {product.mainImage && (
+                        <Image
+                          src={urlFor(product.mainImage).url()}
+                          alt={product.title}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      )}
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 hover:text-blue-600 transition-colors mb-2">
+                      {product.title}
+                    </h3>
+                  </Link>
+                  <p className="text-blue-600 font-bold mb-4">
                     {product.price ? `RM ${product.price.toLocaleString()}` : 'Contact for Price'}
                   </p>
-                </Link>
+                  <ProductActions
+                    product={{
+                      productId: product._id,
+                      title: product.title,
+                      slug: product.slug,
+                      price: product.price,
+                      imageUrl: product.mainImage ? urlFor(product.mainImage).url() : undefined,
+                    }}
+                    showViewDetails
+                  />
+                </article>
               ))
             ) : (
               <div className="col-span-full text-center py-12 bg-white rounded-2xl border border-dashed border-gray-300">

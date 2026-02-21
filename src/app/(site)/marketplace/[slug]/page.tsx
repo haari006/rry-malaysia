@@ -1,3 +1,4 @@
+import ProductActions from '@/components/product/ProductActions'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import Image from 'next/image'
@@ -5,121 +6,97 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 interface Product {
-    title: string
-    slug: string
-    mainImage: any
-    price?: number
-    description?: string
-    categories?: string[]
+  _id: string
+  title: string
+  slug: string
+  mainImage: any
+  price?: number
+  description?: string
+  categories?: string[]
 }
 
-interface CompanyInfo {
-    whatsapp?: string
-}
-
-async function getData(slug: string): Promise<{ product: Product, companyInfo: CompanyInfo } | null> {
-    return client.fetch(`
-    {
-      "product": *[_type == "product" && slug.current == $slug][0] {
-        title,
-        "slug": slug.current,
-        mainImage,
-        price,
-        description,
-        categories
-      },
-      "companyInfo": *[_type == "companyInfo"][0] {
-        whatsapp
-      }
+async function getProduct(slug: string): Promise<Product | null> {
+  return client.fetch(
+    `
+    *[_type == "product" && slug.current == $slug][0] {
+      _id,
+      title,
+      "slug": slug.current,
+      mainImage,
+      price,
+      description,
+      categories
     }
-  `, { slug })
+  `,
+    { slug }
+  )
 }
 
-export default async function ProductPage({ params }: { params: { slug: string } }) {
-    // Await params first (Next.js 15 requirement, though works in 14 too)
-    const { slug } = await params
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const product = await getProduct(slug)
 
-    const data = await getData(slug)
-    const { product, companyInfo } = data || {}
+  if (!product) {
+    notFound()
+  }
 
-    if (!product) {
-        notFound()
-    }
+  return (
+    <div className="bg-white min-h-screen py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Link href="/marketplace" className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-8 transition-colors">
+          &larr; Back to Marketplace
+        </Link>
 
-    // Fallback number if company info is missing
-    const whatsappNumber = companyInfo?.whatsapp || '60123456789'
-    // Remove non-numeric chars for the link
-    const cleanNumber = whatsappNumber.replace(/\D/g, '')
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          <div className="relative rounded-2xl overflow-hidden bg-gray-100 aspect-square shadow-sm">
+            {product.mainImage ? (
+              <Image
+                src={urlFor(product.mainImage).url()}
+                alt={product.title}
+                fill
+                className="object-cover"
+                priority
+              />
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-400">No Image Available</div>
+            )}
+          </div>
 
-    const message = encodeURIComponent(
-        `Hi, I'm interested in the "${product.title}" listed on your marketplace.`
-    )
-    const whatsappLink = `https://wa.me/${cleanNumber}?text=${message}`
-
-    return (
-        <div className="bg-white min-h-screen py-12">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <Link href="/marketplace" className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-8 transition-colors">
-                    &larr; Back to Marketplace
-                </Link>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-                    {/* Image Section */}
-                    <div className="relative rounded-2xl overflow-hidden bg-gray-100 aspect-square shadow-sm">
-                        {product.mainImage ? (
-                            <Image
-                                src={urlFor(product.mainImage).url()}
-                                alt={product.title}
-                                fill
-                                className="object-cover"
-                                priority
-                            />
-                        ) : (
-                            <div className="flex items-center justify-center h-full text-gray-400">
-                                No Image Available
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Details Section */}
-                    <div className="flex flex-col h-full">
-                        <div className="mb-2">
-                            {product.categories && product.categories.map(cat => (
-                                <span key={cat} className="inline-block mr-2 mb-2 text-sm font-semibold px-3 py-1 rounded-full bg-blue-50 text-blue-700 capitalize">
-                                    {cat.replace('-', ' ')}
-                                </span>
-                            ))}
-                        </div>
-
-                        <h1 className="text-4xl font-bold text-gray-900 mb-4">{product.title}</h1>
-
-                        <div className="text-3xl font-bold text-blue-600 mb-8">
-                            {product.price ? `RM ${product.price.toLocaleString()}` : 'Price on Ask'}
-                        </div>
-
-                        <div className="prose prose-lg text-gray-600 mb-8">
-                            <p>{product.description || "No description available for this product."}</p>
-                        </div>
-
-                        <div className="mt-auto pt-8 border-t border-gray-100">
-                            <p className="text-sm text-gray-500 mb-4">
-                                Interested? Contact us directly via WhatsApp to inquire or purchase.
-                            </p>
-                            <a
-                                href={whatsappLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 text-base font-bold text-white bg-[#25D366] hover:bg-[#20bd5a] rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-                            >
-                                <svg className="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.506-.669-.51-.173-.004-.371-.004-.57-.004-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
-                                </svg>
-                                Chat on WhatsApp
-                            </a>
-                        </div>
-                    </div>
-                </div>
+          <div className="flex flex-col h-full">
+            <div className="mb-2">
+              {product.categories?.map((cat) => (
+                <span key={cat} className="inline-block mr-2 mb-2 text-sm font-semibold px-3 py-1 rounded-full bg-blue-50 text-blue-700 capitalize">
+                  {cat.replace('-', ' ')}
+                </span>
+              ))}
             </div>
+
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">{product.title}</h1>
+
+            <div className="text-3xl font-bold text-blue-600 mb-8">
+              {product.price ? `RM ${product.price.toLocaleString()}` : 'Price on Ask'}
+            </div>
+
+            <div className="prose prose-lg text-gray-600 mb-8">
+              <p>{product.description || 'No description available for this product.'}</p>
+            </div>
+
+            <div className="mt-auto pt-8 border-t border-gray-100">
+              <p className="text-sm text-gray-500 mb-4">Interested? Ask via WhatsApp or add this product to cart and submit your order.</p>
+              <ProductActions
+                product={{
+                  productId: product._id,
+                  title: product.title,
+                  slug: product.slug,
+                  price: product.price,
+                  imageUrl: product.mainImage ? urlFor(product.mainImage).url() : undefined,
+                }}
+                fullWidth
+              />
+            </div>
+          </div>
         </div>
-    )
+      </div>
+    </div>
+  )
 }
