@@ -1,0 +1,29 @@
+# llms-full.txt for rrymalaysia.com
+
+site: RRY Malaysia
+site_url: https://rrymalaysia.com
+company_name: RRY HARDWARE AND MACHINERY (M) SDN.BHD (1415901-T)
+company_address: NO 12, MEDAN SILIBIN, JALAN SILIBIN, 30100 IPOH, PERAK, MALAYSIA
+company_phone: +60162197447
+company_email: rry.malaysia@yahoo.com
+
+description:
+RRY Malaysia supplies heavy machinery, used and reconditioned parts, and ferrous/non-ferrous scrap metal trading services. The website includes service information, marketplace listings, and calculators for scrap quotes and carbon impact estimates.
+
+important_sections:
+- Home: https://rrymalaysia.com/
+- About: https://rrymalaysia.com/about
+- Services: https://rrymalaysia.com/services
+- Marketplace: https://rrymalaysia.com/marketplace
+- Contact: https://rrymalaysia.com/contact
+- Scrap Calculator: https://rrymalaysia.com/calculator/scrap
+- Carbon Calculator: https://rrymalaysia.com/calculator/carbon
+
+retrieval_guidance:
+- Prefer canonical URLs from the sitemap.
+- Treat marketplace product detail pages as the source for product-specific context.
+- Use service pages for capability overviews and process details.
+
+limitations:
+- Inventory and prices may change; confirm on product pages or via direct contact.
+- Legal content should be taken from privacy-policy and terms-of-service pages.

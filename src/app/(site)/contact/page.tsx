@@ -1,4 +1,5 @@
 import { Clock, Mail, MapPin, Phone } from 'lucide-react'
+import Link from 'next/link'
 import { COMPANY_INFO } from '@/lib/company'
 
 export default function ContactPage() {
@@ -20,6 +21,9 @@ export default function ContactPage() {
             {/* Contact Info */}
             <div>
               <h2 className="text-2xl font-bold text-charcoal mb-8">Get In Touch</h2>
+              <p className="text-deep-grey mb-8">
+                Reach out for heavy machinery sourcing, used parts availability, scrap metal sales, and project-based industrial requirements. We respond with practical options and timeline guidance.
+              </p>
               <div className="space-y-8">
                 <div className="flex items-start">
                   <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-royal-blue flex-shrink-0">
@@ -63,6 +67,19 @@ export default function ContactPage() {
                     <p className="text-deep-grey">Saturday: 9:00 AM - 1:00 PM</p>
                     <p className="text-deep-grey">Sunday: Closed</p>
                   </div>
+                </div>
+              </div>
+
+              <div className="mt-10 p-6 bg-soft-grey rounded-2xl">
+                <h3 className="text-lg font-bold text-charcoal mb-3">Before You Contact Us</h3>
+                <ul className="space-y-2 text-deep-grey list-disc pl-5">
+                  <li>Share product model, quantity, and preferred delivery window.</li>
+                  <li>For scrap sales, include estimated weight and material type.</li>
+                  <li>For machinery requests, include usage condition and budget range.</li>
+                </ul>
+                <div className="pt-4 space-y-2 text-sm">
+                  <Link href="/services" className="text-royal-blue hover:text-blue-700 font-medium block">Review services before inquiry</Link>
+                  <Link href="/marketplace" className="text-royal-blue hover:text-blue-700 font-medium block">Check live marketplace listings</Link>
                 </div>
               </div>
             </div>

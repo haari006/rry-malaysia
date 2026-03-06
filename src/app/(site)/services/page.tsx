@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { CheckCircle, Recycle, Truck } from 'lucide-react'
 
 export default function ServicesPage() {
@@ -26,6 +27,13 @@ export default function ServicesPage() {
                 <p className="text-deep-grey mb-6">
                   We specialize in sourcing, trading, and supplying a wide range of construction and earth-moving machines. We ensure proper inspection, fair pricing, and smooth delivery.
                 </p>
+                <p className="text-deep-grey mb-6">
+                  Our team supports contractors and fleet operators with equipment checks, sourcing options, and logistics planning to reduce project downtime.
+                </p>
+                <div className="space-y-2 text-sm">
+                  <Link href="/marketplace" className="text-royal-blue hover:text-blue-700 font-medium block">Browse available machinery listings</Link>
+                  <Link href="/contact" className="text-royal-blue hover:text-blue-700 font-medium block">Request a machinery sourcing quote</Link>
+                </div>
               </div>
             </div>
             <div className="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -67,6 +75,13 @@ export default function ServicesPage() {
                 <p className="text-deep-grey mb-6">
                   We trade both ferrous and non-ferrous scrap metals, offering consistent grading and competitive pricing. We ensure accurate grading, clean materials, and fast logistics.
                 </p>
+                <p className="text-deep-grey mb-6">
+                  For regular suppliers, we provide repeat collection scheduling, transparent weighing, and clear grading notes so you can plan cash flow with confidence.
+                </p>
+                <div className="space-y-2 text-sm">
+                  <Link href="/calculator/scrap" className="text-royal-blue hover:text-blue-700 font-medium block">Estimate value with the scrap calculator</Link>
+                  <Link href="/contact" className="text-royal-blue hover:text-blue-700 font-medium block">Book scrap pickup or delivery coordination</Link>
+                </div>
               </div>
             </div>
             <div className="md:w-2/3 space-y-12">
@@ -102,6 +117,26 @@ export default function ServicesPage() {
                   ))}
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-charcoal mb-6">Service Process and Delivery Coverage</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-deep-grey">
+            <div className="bg-white p-6 rounded-2xl">
+              <h3 className="text-xl font-semibold text-charcoal mb-2">1. Requirement Review</h3>
+              <p>Share your equipment or material needs, timeline, budget, and destination. We propose suitable options and expected lead times.</p>
+            </div>
+            <div className="bg-white p-6 rounded-2xl">
+              <h3 className="text-xl font-semibold text-charcoal mb-2">2. Inspection and Confirmation</h3>
+              <p>We verify key condition details, prepare pricing, and confirm grading standards before dispatch or collection.</p>
+            </div>
+            <div className="bg-white p-6 rounded-2xl">
+              <h3 className="text-xl font-semibold text-charcoal mb-2">3. Logistics and Support</h3>
+              <p>We arrange loading, transport coordination, and post-delivery follow-up for clients across Perak and wider Malaysia.</p>
             </div>
           </div>
         </div>

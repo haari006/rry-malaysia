@@ -37,7 +37,22 @@ export default async function MarketplacePage() {
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Browse our selection of quality auto parts, scrap metal, and machinery. Contact us for the best prices.
           </p>
+          <p className="text-base text-gray-600 max-w-3xl mx-auto mt-4">
+            Each listing is backed by direct inquiry support, with guidance on specifications, suitable use cases, and delivery coordination across Malaysia.
+          </p>
         </div>
+
+        <section className="mb-12 bg-white border border-gray-100 rounded-2xl p-6 md:p-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">How to Buy from Our Marketplace</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-gray-600">
+            <p><span className="font-semibold text-gray-900">1.</span> Open the listing and review title, category, and price guidance.</p>
+            <p><span className="font-semibold text-gray-900">2.</span> Ask for condition details, availability, and latest quote via WhatsApp.</p>
+            <p><span className="font-semibold text-gray-900">3.</span> Confirm quantity, transport arrangement, and expected delivery timeline.</p>
+          </div>
+          <div className="mt-5 text-sm">
+            <Link href="/services" className="text-blue-600 hover:text-blue-700 font-medium">Need full sourcing support? See our services.</Link>
+          </div>
+        </section>
 
         {products.length === 0 ? (
           <div className="text-center py-20">
@@ -53,7 +68,11 @@ export default async function MarketplacePage() {
                   key={product._id}
                   className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col"
                 >
-                  <Link href={`/marketplace/${product.slug}`} className="relative h-64 w-full bg-gray-100 overflow-hidden group">
+                  <Link
+                    href={`/marketplace/${product.slug}`}
+                    aria-label={`View details for ${product.title}`}
+                    className="relative h-64 w-full bg-gray-100 overflow-hidden group"
+                  >
                     {imageUrl ? (
                       <Image
                         src={imageUrl}
@@ -77,7 +96,11 @@ export default async function MarketplacePage() {
                       </div>
                     )}
 
-                    <Link href={`/marketplace/${product.slug}`} className="text-xl font-semibold text-gray-900 mb-2 hover:text-blue-600 transition-colors">
+                    <Link
+                      href={`/marketplace/${product.slug}`}
+                      aria-label={`Open ${product.title} product page`}
+                      className="text-xl font-semibold text-gray-900 mb-2 hover:text-blue-600 transition-colors"
+                    >
                       {product.title}
                     </Link>
 

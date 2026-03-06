@@ -75,7 +75,11 @@ export default async function Home() {
                   key={product._id}
                   className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                 >
-                  <Link href={`/marketplace/${product.slug}`} className="block">
+                  <Link
+                    href={`/marketplace/${product.slug}`}
+                    aria-label={`View details for ${product.title}`}
+                    className="block"
+                  >
                     <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 mb-4 group">
                       {product.mainImage && (
                         <Image

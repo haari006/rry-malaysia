@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { COMPANY_INFO } from "@/lib/company";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -46,6 +47,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: "@rrymalaysia",
+    creator: "@rrymalaysia",
     title: "RRY Malaysia | Heavy Machinery & Scrap Metal Trading",
     description:
       "Trusted partner for heavy machinery, auto parts, and scrap metal trading in Malaysia.",
@@ -69,8 +72,97 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "RRY Malaysia",
+    legalName: COMPANY_INFO.name,
+    url: "https://rrymalaysia.com",
+    logo: "https://rrymalaysia.com/logo.png",
+    email: COMPANY_INFO.email,
+    telephone: COMPANY_INFO.phone,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "NO 12, MEDAN SILIBIN, JALAN SILIBIN",
+      postalCode: "30100",
+      addressLocality: "Ipoh",
+      addressRegion: "Perak",
+      addressCountry: "MY",
+    },
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        contactType: "sales",
+        telephone: COMPANY_INFO.phone,
+        email: COMPANY_INFO.email,
+        areaServed: "MY",
+        availableLanguage: ["en", "ms"],
+      },
+    ],
+    sameAs: [
+      "https://rrymalaysia.com",
+    ],
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "RRY Malaysia",
+    url: "https://rrymalaysia.com",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: "https://rrymalaysia.com/marketplace",
+      "query-input": "required name=search_term_string",
+    },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://rrymalaysia.com/",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Services",
+        item: "https://rrymalaysia.com/services",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: "Marketplace",
+        item: "https://rrymalaysia.com/marketplace",
+      },
+      {
+        "@type": "ListItem",
+        position: 4,
+        name: "Contact",
+        item: "https://rrymalaysia.com/contact",
+      },
+    ],
+  };
+
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        />
+      </head>
       <body
         className={`${inter.variable} antialiased bg-background text-foreground`}
       >

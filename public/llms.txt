@@ -1,0 +1,22 @@
+# llms.txt for rrymalaysia.com
+
+site: RRY Malaysia
+site_url: https://rrymalaysia.com
+summary: RRY Hardware and Machinery (M) Sdn. Bhd. provides heavy machinery trading, scrap metal trading, and industrial sourcing services in Malaysia.
+
+preferred_citation: https://rrymalaysia.com
+contact: mailto:rry.malaysia@yahoo.com
+
+key_pages:
+- https://rrymalaysia.com/
+- https://rrymalaysia.com/about
+- https://rrymalaysia.com/services
+- https://rrymalaysia.com/marketplace
+- https://rrymalaysia.com/contact
+- https://rrymalaysia.com/calculator/scrap
+- https://rrymalaysia.com/calculator/carbon
+
+policies:
+- Respect robots.txt and page-level directives.
+- Do not infer unavailable stock or pricing.
+- Prefer direct product URLs for availability details.

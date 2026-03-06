@@ -1,4 +1,5 @@
 import { Eye, Target, Users } from 'lucide-react'
+import Link from 'next/link'
 
 export default function AboutPage() {
   return (
@@ -26,6 +27,14 @@ export default function AboutPage() {
                 <p>
                   Our core strength lies in our wide sourcing network, transparent business approach, and commitment to quality. Whether you need an excavator, a reconditioned hydraulic pump, or premium-grade scrap copper, we deliver with consistency and trust.
                 </p>
+                <p>
+                  We focus on clear communication from inquiry to delivery, with practical support for inspection, documentation, and transport planning. This keeps procurement and recycling workflows efficient for our clients.
+                </p>
+                <div className="pt-2 space-y-2 text-sm">
+                  <Link href="/services" className="text-royal-blue hover:text-blue-700 font-medium block">See our full service capabilities</Link>
+                  <Link href="/marketplace" className="text-royal-blue hover:text-blue-700 font-medium block">View current marketplace inventory</Link>
+                  <Link href="/contact" className="text-royal-blue hover:text-blue-700 font-medium block">Contact our team for sourcing support</Link>
+                </div>
               </div>
             </div>
             <div className="bg-gray-100 rounded-3xl h-[400px] flex items-center justify-center">
@@ -75,6 +84,26 @@ export default function AboutPage() {
                   To promote sustainable recycling practices.
                 </li>
               </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-charcoal mb-6">Why Industrial Buyers Work With Us</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-deep-grey">
+            <div className="bg-soft-grey p-6 rounded-2xl">
+              <h3 className="text-xl font-semibold text-charcoal mb-2">Transparent Deal Structure</h3>
+              <p>We share condition notes, pricing assumptions, and logistics details early so buyers can make fast, informed decisions.</p>
+            </div>
+            <div className="bg-soft-grey p-6 rounded-2xl">
+              <h3 className="text-xl font-semibold text-charcoal mb-2">Practical Local Knowledge</h3>
+              <p>Operating from Ipoh, Perak, we support local and regional operations with sourcing recommendations that match on-ground needs.</p>
+            </div>
+            <div className="bg-soft-grey p-6 rounded-2xl">
+              <h3 className="text-xl font-semibold text-charcoal mb-2">Long-Term Partnerships</h3>
+              <p>Many clients engage us for recurring procurement and recycling, built on consistent execution and responsive communication.</p>
             </div>
           </div>
         </div>
