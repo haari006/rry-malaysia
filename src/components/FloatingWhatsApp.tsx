@@ -1,11 +1,14 @@
 'use client'
 
-import { buildWhatsAppLink, COMPANY_INFO } from '@/lib/company'
+import { useCompanyInfo } from '@/components/CompanyProvider'
+
+import { buildWhatsAppLink } from '@/lib/company'
 import { motion } from 'framer-motion'
 
 export default function FloatingWhatsApp() {
+  const company = useCompanyInfo()
   const message = 'Hello, I am interested in your services.'
-  const whatsappUrl = buildWhatsAppLink(message)
+  const whatsappUrl = buildWhatsAppLink(message, company.whatsappNumber)
 
   return (
     <motion.a
@@ -18,7 +21,7 @@ export default function FloatingWhatsApp() {
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
       className="fixed bottom-8 right-8 z-50 flex items-center justify-center w-16 h-16 bg-[#25D366] rounded-full shadow-lg hover:shadow-xl transition-shadow duration-300 group"
-      aria-label={`Chat with ${COMPANY_INFO.name} on WhatsApp`}
+      aria-label={`Chat with ${company.name} on WhatsApp`}
     >
       <span className="absolute right-full mr-4 bg-white text-charcoal text-sm font-medium px-3 py-1 rounded-lg shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none">
         Chat with us

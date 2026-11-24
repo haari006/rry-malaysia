@@ -1,6 +1,9 @@
-import { COMPANY_INFO } from '@/lib/company'
+import { getCompanyInfo } from '@/sanity/lib/content'
 
-export default function TermsOfServicePage() {
+export const revalidate = 3600
+
+export default async function TermsOfServicePage() {
+  const company = await getCompanyInfo()
   return (
     <div className="bg-white min-h-screen">
       {/* Header */}
@@ -162,10 +165,10 @@ export default function TermsOfServicePage() {
               If you have any questions about these Terms of Service, please contact us:
             </p>
             <div className="bg-soft-grey p-6 rounded-lg">
-              <p className="text-charcoal font-semibold mb-2">{COMPANY_INFO.name}</p>
-              <p className="text-deep-grey">Email: {COMPANY_INFO.email}</p>
-              <p className="text-deep-grey">Phone: {COMPANY_INFO.phone}</p>
-              <p className="text-deep-grey">Address: {COMPANY_INFO.address}</p>
+              <p className="text-charcoal font-semibold mb-2">{company.name}</p>
+              <p className="text-deep-grey">Email: {company.email}</p>
+              <p className="text-deep-grey">Phone: {company.phone}</p>
+              <p className="text-deep-grey">Address: {company.address}</p>
             </div>
           </section>
 

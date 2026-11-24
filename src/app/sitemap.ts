@@ -1,13 +1,15 @@
 import { client } from '@/sanity/lib/client'
 import type { MetadataRoute } from 'next'
 
+export const revalidate = 60
+
 const SITE_URL = 'https://rrymalaysia.com'
 
 async function getProductSlugs(): Promise<string[]> {
   try {
     const slugs = await client.fetch<string[]>(`
       *[_type == "product" && defined(slug.current)].slug.current
-    `)
+    `, {}, { next: { revalidate: 60 } })
 
     return Array.isArray(slugs) ? slugs.filter(Boolean) : []
   } catch (error) {

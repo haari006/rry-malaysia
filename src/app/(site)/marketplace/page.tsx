@@ -4,6 +4,8 @@ import { urlFor } from '@/sanity/lib/image'
 import Image from 'next/image'
 import Link from 'next/link'
 
+export const revalidate = 60
+
 interface Product {
   _id: string
   title: string
@@ -23,7 +25,7 @@ async function getProducts(): Promise<Product[]> {
       price,
       categories
     }
-  `)
+  `, {}, { next: { revalidate: 60 } })
 }
 
 export default async function MarketplacePage() {

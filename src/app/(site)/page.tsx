@@ -1,11 +1,16 @@
+import ContentIcon from '@/components/ContentIcon'
+import { getHomeContent, getServices, defaultServices, serviceAnchor } from '@/sanity/lib/content'
+import { safeContentHref } from '@/lib/content'
 import Hero from '@/components/Hero'
 import ServiceCard from '@/components/ServiceCard'
 import ProductActions from '@/components/product/ProductActions'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
-import { Calculator, Recycle, ShieldCheck, TrendingUp, Truck } from 'lucide-react'
+import { Calculator, Recycle, TrendingUp, Truck } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+
+export const revalidate = 60
 
 async function getFeaturedProducts() {
   return client.fetch(`
@@ -16,15 +21,27 @@ async function getFeaturedProducts() {
       mainImage,
       price
     }
-  `)
+  `, {}, { next: { revalidate: 60 } })
 }
 
 export default async function Home() {
-  const featuredProducts = await getFeaturedProducts()
+  const [featuredProducts, content, publishedServices] = await Promise.all([
+    getFeaturedProducts(), getHomeContent(), getServices(),
+  ])
+  const services = publishedServices.length ? publishedServices : defaultServices
+  const features = content.features.length ? content.features : [
+    { _id: 'network', title: 'Trusted Network', description: 'Wide sourcing network across Malaysia and abroad.', icon: 'ShieldCheck' },
+    { _id: 'quality', title: 'Quality Assurance', description: 'Rigorous inspection and grading processes.', icon: 'ShieldCheck' },
+    { _id: 'pricing', title: 'Fair Pricing', description: 'Transparent and competitive market rates.', icon: 'ShieldCheck' },
+  ]
+  const cta = content.cta
+  const ctaTheme = cta?.backgroundColor === 'royal-blue' ? 'bg-royal-blue text-white'
+    : cta?.backgroundColor === 'charcoal' ? 'bg-charcoal text-white' : 'bg-white text-charcoal'
+  const ctaDark = cta?.backgroundColor === 'royal-blue' || cta?.backgroundColor === 'charcoal'
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Hero />
+      <Hero content={content.hero} />
 
       {/* Highlights Section */}
       <section className="py-24 bg-white">
@@ -37,18 +54,15 @@ export default async function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <ServiceCard
-              title="Heavy Machinery Trading"
-              description="Sourcing and supplying high-quality used and reconditioned construction machinery, including excavators, earthmovers, and spare parts."
-              icon={<Truck size={24} />}
-              href="/services#machinery"
-            />
-            <ServiceCard
-              title="Scrap Metal Trading"
-              description="Competitive pricing and consistent grading for ferrous and non-ferrous scrap metals, ensuring sustainable recycling practices."
-              icon={<Recycle size={24} />}
-              href="/services#scrap"
-            />
+            {services.map((service) => (
+              <ServiceCard
+                key={service._id}
+                title={service.title || 'Our Service'}
+                description={service.description || ''}
+                icon={service.category === 'scrap' ? <Recycle size={24} /> : <Truck size={24} />}
+                href={`/services#${encodeURIComponent(serviceAnchor(service))}`}
+              />
+            ))}
           </div>
         </div>
       </section>
@@ -174,18 +188,14 @@ export default async function Home() {
               </p>
 
               <div className="space-y-6">
-                {[
-                  { title: 'Trusted Network', desc: 'Wide sourcing network across Malaysia and abroad.' },
-                  { title: 'Quality Assurance', desc: 'Rigorous inspection and grading processes.' },
-                  { title: 'Fair Pricing', desc: 'Transparent and competitive market rates.' },
-                ].map((item, idx) => (
-                  <div key={idx} className="flex items-start">
+                {features.map((item) => (
+                  <div key={item._id} className="flex items-start">
                     <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-royal-blue mt-1">
-                      <ShieldCheck size={20} />
+                      <ContentIcon name={item.icon} />
                     </div>
                     <div className="ml-4">
                       <h3 className="text-xl font-bold text-charcoal">{item.title}</h3>
-                      <p className="text-deep-grey">{item.desc}</p>
+                      <p className="text-deep-grey">{item.description}</p>
                     </div>
                   </div>
                 ))}
@@ -206,17 +216,17 @@ export default async function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-white">
+      <section className={`py-24 ${ctaTheme}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-6">Ready to work with us?</h2>
-          <p className="text-deep-grey text-lg max-w-2xl mx-auto mb-10">
-            Whether you're looking to buy machinery or sell scrap metal, we are here to provide the best solutions for your business.
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">{cta?.title || "Ready to work with us?"}</h2>
+          <p className={`text-lg max-w-2xl mx-auto mb-10 ${ctaDark ? "text-white" : "text-deep-grey"}`}>
+            {cta?.description || "Whether you're looking to buy machinery or sell scrap metal, we are here to provide the best solutions for your business."}
           </p>
           <Link
-            href="/contact"
-            className="inline-flex items-center px-10 py-5 bg-royal-blue text-white rounded-full font-bold text-lg hover:bg-royal-blue-hover transition-colors shadow-lg"
+            href={safeContentHref(cta?.buttonLink, "/contact")}
+            className={`inline-flex items-center px-10 py-5 rounded-full font-bold text-lg transition-colors shadow-lg ${ctaDark ? "bg-white text-royal-blue hover:bg-gray-100" : "bg-royal-blue text-white hover:bg-royal-blue-hover"}`}
           >
-            Get in Touch
+            {cta?.buttonText || "Get in Touch"}
           </Link>
         </div>
       </section>

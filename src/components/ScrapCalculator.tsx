@@ -1,13 +1,15 @@
 'use client'
 
+import { calculateScrapQuote } from '@/lib/scrap-quote'
 import { useEffect, useState } from 'react'
 
-interface ScrapRate {
+export interface ScrapRate {
     _id: string
     materialName: string
     currentPrice: number
     unit: string
     trend?: string
+    lastUpdated?: string
 }
 
 interface ScrapCalculatorProps {
@@ -21,7 +23,7 @@ export default function ScrapCalculator({ rates, whatsappNumber }: ScrapCalculat
     const [weight, setWeight] = useState<number | ''>('')
     const [selectedRateId, setSelectedRateId] = useState<string>('')
     const [location, setLocation] = useState('walk-in')
-    const [estimatedValue, setEstimatedValue] = useState<number | null>(null)
+    const [showEstimate, setShowEstimate] = useState(false)
 
     useEffect(() => {
         // Check time in Malaysia (UTC+8)
@@ -46,33 +48,18 @@ export default function ScrapCalculator({ rates, whatsappNumber }: ScrapCalculat
         // Optional: Set interval to check every minute? Not strictly necessary for "Instant" visit.
     }, [])
 
+    const selectedRate = rates.find(rate => rate._id === selectedRateId)
+    const estimate = calculateScrapQuote(Number(weight), selectedRate)
+    const estimatedValue = showEstimate ? estimate : null
+    const unitLabel = selectedRate?.unit === 'ton' ? 'tonnes' : 'kg'
+
     const handleCalculate = () => {
-        if (!weight || !selectedRateId) return
-
-        const rate = rates.find(r => r._id === selectedRateId)
-        if (!rate) return
-
-        let price = rate.currentPrice
-        const numericWeight = Number(weight)
-
-        // 1. Quantity Bonus (> 1000kg -> +5%) - Example logic
-        if (numericWeight > 1000 && rate.unit === 'kg') {
-            price = price * 1.05
-        }
-
-        // 2. Location/Mode Logic
-        // Walk-in: Standard
-        // Pickup: Deduct transport fee? Or just "Subject to verification". 
-        // Let's assume Pickup -10% for logistics cost if < 500kg, free if > 500kg?
-        // Keeping it simple as per plan: just differentiate price.
-        if (location === 'pickup') {
-            if (numericWeight < 500) {
-                price = price * 0.90 // 10% deduction
-            }
-        }
-
-        setEstimatedValue(numericWeight * price)
+        setShowEstimate(estimate !== null)
     }
+
+    const updatedDate = selectedRate?.lastUpdated ? new Date(selectedRate.lastUpdated) : null
+    const updatedLabel = updatedDate && !Number.isNaN(updatedDate.getTime())
+        ? updatedDate.toLocaleString('en-MY', { timeZone: 'Asia/Kuala_Lumpur' }) : null
 
     const cleanNumber = whatsappNumber.replace(/\D/g, '')
     const closedMessage = encodeURIComponent("Hi, I'd like to get a scrap metal quote correctly. I know it's before 10am!")
@@ -112,13 +99,13 @@ export default function ScrapCalculator({ rates, whatsappNumber }: ScrapCalculat
                 ) : (
                     <div className="space-y-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Select Material</label>
-                            <select
+                            <label htmlFor="scrap-material" className="block text-sm font-medium text-gray-700 mb-2">Select Material</label>
+                            <select id="scrap-material"
                                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                                 value={selectedRateId}
                                 onChange={(e) => {
                                     setSelectedRateId(e.target.value)
-                                    setEstimatedValue(null)
+                                    setShowEstimate(false)
                                 }}
                             >
                                 <option value="">-- Choose Material --</option>
@@ -128,37 +115,49 @@ export default function ScrapCalculator({ rates, whatsappNumber }: ScrapCalculat
                                     </option>
                                 ))}
                             </select>
+                            {rates.length === 0 && <p className="mt-2 text-sm text-gray-500">No rates available. Contact us for a quote.</p>}
+                            {selectedRate && <p className="mt-2 text-sm text-gray-600">RM {selectedRate.currentPrice.toLocaleString()} per {selectedRate.unit}</p>}
+                            {updatedLabel && <p className="mt-1 text-sm text-gray-500">Last updated: <time dateTime={selectedRate?.lastUpdated}>{updatedLabel} MYT</time></p>}
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Weight</label>
+                                <label htmlFor="scrap-weight" className="block text-sm font-medium text-gray-700 mb-2">Weight ({unitLabel})</label>
                                 <div className="relative">
                                     <input
+                                        id="scrap-weight"
+                                        aria-describedby="scrap-weight-help"
+                                        step="any"
                                         type="number"
                                         min="0"
                                         placeholder="0"
                                         className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                                         value={weight}
                                         onChange={(e) => {
-                                            setWeight(Number(e.target.value))
-                                            setEstimatedValue(null)
+                                            setWeight(e.target.value === '' ? '' : Number(e.target.value))
+                                            setShowEstimate(false)
                                         }}
                                     />
                                     <span className="absolute right-4 top-3 text-gray-400">
-                                        {rates.find(r => r._id === selectedRateId)?.unit || 'kg'}
+                                        {unitLabel}
                                     </span>
                                 </div>
+                                <p id="scrap-weight-help" className="mt-2 text-sm text-gray-500">
+                                    {selectedRate?.unit === 'ton' ? 'Enter metric tonnes (1 tonne = 1,000 kg).' : 'Enter weight in kilograms.'}
+                                </p>
+                                {weight !== '' && (!Number.isFinite(weight) || weight <= 0) && (
+                                    <p role="alert" className="mt-2 text-sm text-red-600">Enter a weight greater than zero.</p>
+                                )}
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Service Type</label>
-                                <select
+                                <label htmlFor="scrap-service" className="block text-sm font-medium text-gray-700 mb-2">Service Type</label>
+                                <select id="scrap-service"
                                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                                     value={location}
                                     onChange={(e) => {
                                         setLocation(e.target.value)
-                                        setEstimatedValue(null)
+                                        setShowEstimate(false)
                                     }}
                                 >
                                     <option value="walk-in">Self Delivery (Walk-in)</option>
@@ -167,10 +166,15 @@ export default function ScrapCalculator({ rates, whatsappNumber }: ScrapCalculat
                             </div>
                         </div>
 
+                        <p className="text-sm text-gray-600">
+                            Estimate = weight × published material rate. No bonuses or transport deductions are applied.
+                            {location === 'pickup' && ' Any pickup cost must be confirmed separately with our team.'}
+                        </p>
+
                         <button
                             onClick={handleCalculate}
-                            disabled={!weight || !selectedRateId}
-                            className={`w-full py-4 rounded-xl font-bold text-white shadow-lg transition-all transform active:scale-95 ${!weight || !selectedRateId
+                            disabled={estimate === null}
+                            className={`w-full py-4 rounded-xl font-bold text-white shadow-lg transition-all transform active:scale-95 ${estimate === null
                                     ? 'bg-gray-300 cursor-not-allowed'
                                     : 'bg-blue-600 hover:bg-blue-700 hover:-translate-y-1'
                                 }`}
@@ -179,11 +183,14 @@ export default function ScrapCalculator({ rates, whatsappNumber }: ScrapCalculat
                         </button>
 
                         {estimatedValue !== null && (
-                            <div className="mt-8 bg-green-50 rounded-xl p-6 border border-green-100 text-center animate-fade-in">
+                            <div role="status" className="mt-8 bg-green-50 rounded-xl p-6 border border-green-100 text-center animate-fade-in">
                                 <p className="text-sm text-green-600 font-semibold uppercase tracking-wide mb-1">Estimated Value</p>
                                 <div className="text-4xl font-extrabold text-green-700">
                                     RM {estimatedValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </div>
+                                <p className="mt-2 text-sm text-green-700">
+                                    {Number(weight).toLocaleString()} {unitLabel} × RM {selectedRate?.currentPrice.toLocaleString()} per {unitLabel}
+                                </p>
                                 <p className="text-xs text-green-500 mt-2">
                                     *Preliminary quote. Final price subject to on-site grading.
                                 </p>
