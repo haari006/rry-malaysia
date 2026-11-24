@@ -1,10 +1,13 @@
 import ProductActions from '@/components/product/ProductActions'
-import { COMPANY_INFO } from '@/lib/company'
+import { getCompanyInfo } from '@/sanity/lib/content'
+import { serializeJsonLd } from '@/lib/content'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+
+export const revalidate = 60
 
 interface Product {
   _id: string
@@ -29,13 +32,14 @@ async function getProduct(slug: string): Promise<Product | null> {
       categories
     }
   `,
-    { slug }
+    { slug },
+    { next: { revalidate: 60 } }
   )
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const product = await getProduct(slug)
+  const [product, company] = await Promise.all([getProduct(slug), getCompanyInfo()])
 
   if (!product) {
     notFound()
@@ -55,7 +59,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     sku: product._id,
     brand: {
       '@type': 'Organization',
-      name: 'RRY Malaysia',
+      name: company.name,
     },
     category: product.categories?.join(', '),
     offers: {
@@ -65,8 +69,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       availability: 'https://schema.org/InStock',
       seller: {
         '@type': 'Organization',
-        name: 'RRY Malaysia',
-        telephone: COMPANY_INFO.phone,
+        name: company.name,
+        telephone: company.phone,
       },
       ...(product.price ? { price: product.price } : {}),
     },
@@ -101,11 +105,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     <div className="bg-white min-h-screen py-12">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(productSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link href="/marketplace" className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-8 transition-colors">

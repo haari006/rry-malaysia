@@ -1,29 +1,21 @@
 import ScrapCalculator from '@/components/ScrapCalculator'
 import { client } from '@/sanity/lib/client'
-import { COMPANY_INFO } from '@/lib/company'
+import { getCompanyInfo } from '@/sanity/lib/content'
+import type { ScrapRate } from '@/components/ScrapCalculator'
 
 async function getData() {
-    return client.fetch(`
-    {
-      "rates": *[_type == "scrapRate"] | order(materialName asc) {
-        _id,
-        materialName,
-        currentPrice,
-        unit,
-        trend
-      },
-      "companyInfo": *[_type == "companyInfo"][0] {
-        whatsapp
-      }
+    return client.fetch<ScrapRate[]>(`
+    *[_type == "scrapRate"] | order(materialName asc) {
+      _id, materialName, currentPrice, unit, trend, lastUpdated
     }
-  `)
+  `, {}, { next: { revalidate: 60 } })
 }
 
-export const revalidate = 3600 // Revalidate every hour
+export const revalidate = 60
 
 export default async function ScrapCalculatorPage() {
-    const { rates, companyInfo } = await getData()
-    const whatsappNumber = companyInfo?.whatsapp || COMPANY_INFO.whatsappNumber
+    const [rates, company] = await Promise.all([getData(), getCompanyInfo()])
+    const whatsappNumber = company.whatsappNumber
 
     return (
         <div className="bg-gray-50 min-h-screen py-16">

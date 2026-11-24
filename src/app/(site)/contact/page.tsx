@@ -1,8 +1,11 @@
 import { Clock, Mail, MapPin, Phone } from 'lucide-react'
 import Link from 'next/link'
-import { COMPANY_INFO } from '@/lib/company'
+import { getCompanyInfo } from '@/sanity/lib/content'
 
-export default function ContactPage() {
+export const revalidate = 3600
+
+export default async function ContactPage() {
+  const company = await getCompanyInfo()
   return (
     <div className="bg-white min-h-screen">
       {/* Header */}
@@ -20,7 +23,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
             {/* Contact Info */}
             <div>
-              <h2 className="text-2xl font-bold text-charcoal mb-8">Get In Touch</h2>
+              <h2 className="text-2xl font-bold text-charcoal mb-8">{company.name}</h2>
               <p className="text-deep-grey mb-8">
                 Reach out for heavy machinery sourcing, used parts availability, scrap metal sales, and project-based industrial requirements. We respond with practical options and timeline guidance.
               </p>
@@ -31,7 +34,7 @@ export default function ContactPage() {
                   </div>
                   <div className="ml-6">
                     <h3 className="text-lg font-bold text-charcoal mb-1">Phone & WhatsApp</h3>
-                    <p className="text-deep-grey">{COMPANY_INFO.phone}</p>
+                    <p className="text-deep-grey">{company.phone}</p>
                   </div>
                 </div>
 
@@ -41,7 +44,7 @@ export default function ContactPage() {
                   </div>
                   <div className="ml-6">
                     <h3 className="text-lg font-bold text-charcoal mb-1">Email</h3>
-                    <p className="text-deep-grey">{COMPANY_INFO.email}</p>
+                    <p className="text-deep-grey">{company.email}</p>
                   </div>
                 </div>
 
@@ -52,7 +55,7 @@ export default function ContactPage() {
                   <div className="ml-6">
                     <h3 className="text-lg font-bold text-charcoal mb-1">Address</h3>
                     <p className="text-deep-grey max-w-xs">
-                      {COMPANY_INFO.address}
+                      {company.address}
                     </p>
                   </div>
                 </div>
@@ -63,9 +66,7 @@ export default function ContactPage() {
                   </div>
                   <div className="ml-6">
                     <h3 className="text-lg font-bold text-charcoal mb-1">Operating Hours</h3>
-                    <p className="text-deep-grey">Monday - Friday: 9:00 AM - 6:00 PM</p>
-                    <p className="text-deep-grey">Saturday: 9:00 AM - 1:00 PM</p>
-                    <p className="text-deep-grey">Sunday: Closed</p>
+                    <p className="text-deep-grey whitespace-pre-line">{company.operatingHours}</p>
                   </div>
                 </div>
               </div>

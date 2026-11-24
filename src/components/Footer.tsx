@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { COMPANY_INFO } from '@/lib/company'
+import { type CompanyInfo } from '@/lib/company'
 
-export default function Footer() {
+export default function Footer({ company }: { company: CompanyInfo }) {
   return (
     <footer className="bg-white border-t border-gray-100 pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,15 +36,16 @@ export default function Footer() {
           <div>
             <h3 className="text-charcoal font-bold mb-4">Contact</h3>
             <ul className="space-y-3 text-deep-grey">
-              <li>{COMPANY_INFO.address}</li>
-              <li>{COMPANY_INFO.email}</li>
-              <li>{COMPANY_INFO.phone}</li>
+              <li>{company.address}</li>
+              <li>{company.email}</li>
+              <li>{company.phone}</li>
+              <li className="whitespace-pre-line">{company.operatingHours}</li>
             </ul>
           </div>
         </div>
         
         <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
-          <p>&copy; {new Date().getFullYear()} RRY Malaysia. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} {company.name}. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link href="/privacy-policy" className="hover:text-royal-blue transition-colors">Privacy Policy</Link>
             <Link href="/terms-of-service" className="hover:text-royal-blue transition-colors">Terms of Service</Link>

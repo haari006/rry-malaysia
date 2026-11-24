@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { COMPANY_INFO } from "@/lib/company";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -72,38 +71,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const organizationSchema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "RRY Malaysia",
-    legalName: COMPANY_INFO.name,
-    url: "https://rrymalaysia.com",
-    logo: "https://rrymalaysia.com/logo.png",
-    email: COMPANY_INFO.email,
-    telephone: COMPANY_INFO.phone,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "NO 12, MEDAN SILIBIN, JALAN SILIBIN",
-      postalCode: "30100",
-      addressLocality: "Ipoh",
-      addressRegion: "Perak",
-      addressCountry: "MY",
-    },
-    contactPoint: [
-      {
-        "@type": "ContactPoint",
-        contactType: "sales",
-        telephone: COMPANY_INFO.phone,
-        email: COMPANY_INFO.email,
-        areaServed: "MY",
-        availableLanguage: ["en", "ms"],
-      },
-    ],
-    sameAs: [
-      "https://rrymalaysia.com",
-    ],
-  };
-
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -150,10 +117,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}

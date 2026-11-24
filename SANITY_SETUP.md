@@ -12,7 +12,7 @@ Create a file named `.env.local` in the root directory with the following conten
 NEXT_PUBLIC_SANITY_PROJECT_ID=6pnhjydq
 NEXT_PUBLIC_SANITY_DATASET=production
 NEXT_PUBLIC_SANITY_API_VERSION=2024-02-19
-SANITY_API_TOKEN=skQpPYCMKwVSG6ct6pNbreq0ocon7NiGtM9Kui7ZG1GzPINPNaxOkaFRxHdrxVJCwcCm83bwFc9AYeZ6KtmQWi2uknvtAhfbJfgQtnpmLSn9x5n1fh0nu8PVlI68RGuqxWvivJC8gg3tfze0m8Ptgxpk66oqRp6AhPAO79TydyHIUtsLFoFn
+SANITY_API_TOKEN=your-private-sanity-token
 ```
 
 **Important:** Replace `your-project-id` with your actual Sanity project ID.

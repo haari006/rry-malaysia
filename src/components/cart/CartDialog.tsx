@@ -1,5 +1,7 @@
 'use client'
 
+import { useCompanyInfo } from '@/components/CompanyProvider'
+
 import { buildWhatsAppLink, getCartInquiryMessage } from '@/lib/company'
 import { Minus, Plus, Trash2, X } from 'lucide-react'
 import { FormEvent, useMemo, useState } from 'react'
@@ -15,6 +17,7 @@ interface FieldErrors {
 }
 
 export default function CartDialog() {
+  const company = useCompanyInfo()
   const {
     items,
     estimatedTotal,
@@ -36,8 +39,8 @@ export default function CartDialog() {
 
   const totalItems = useMemo(() => items.reduce((sum, item) => sum + item.quantity, 0), [items])
   const whatsappLink = useMemo(
-    () => buildWhatsAppLink(getCartInquiryMessage(items.map(({ title, quantity }) => ({ title, quantity })))),
-    [items]
+    () => buildWhatsAppLink(getCartInquiryMessage(items.map(({ title, quantity }) => ({ title, quantity }))), company.whatsappNumber),
+    [items, company.whatsappNumber]
   )
 
   if (!isCartOpen) {

@@ -1,15 +1,26 @@
+import ContentRichText from '@/components/ContentRichText'
+import { getAboutContent } from '@/sanity/lib/content'
 import { Eye, Target, Users } from 'lucide-react'
 import Link from 'next/link'
 
-export default function AboutPage() {
+export const revalidate = 3600
+
+export default async function AboutPage() {
+  const content = await getAboutContent()
+  const missionPoints = content?.missionPoints ?? [
+    'To supply quality used machinery and spare parts at competitive prices.',
+    'To provide consistent and well-graded scrap metals for local and international buyers.',
+    'To build long-term relationships based on trust, transparency, and customer satisfaction.',
+    'To promote sustainable recycling practices.',
+  ]
   return (
     <div className="bg-white min-h-screen">
       {/* Header */}
       <div className="bg-soft-grey py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-charcoal mb-6">About Us</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-charcoal mb-6">{content?.pageTitle || "About Us"}</h1>
           <p className="text-xl text-deep-grey max-w-3xl mx-auto">
-            We are a dynamic trading company specializing in heavy machinery and scrap metal, committed to quality and trust.
+            {content?.pageSubtitle || "We are a dynamic trading company specializing in heavy machinery and scrap metal, committed to quality and trust."}
           </p>
         </div>
       </div>
@@ -19,8 +30,9 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="text-3xl font-bold text-charcoal mb-6">Who We Are</h2>
+              <h2 className="text-3xl font-bold text-charcoal mb-6">{content?.whoWeAreTitle || "Who We Are"}</h2>
               <div className="space-y-4 text-deep-grey leading-relaxed">
+                {content?.whoWeAreContent ? <ContentRichText value={content.whoWeAreContent} /> : <>
                 <p>
                   With years of experience in machinery sourcing and metal recycling, we provide reliable solutions to contractors, traders, recyclers, and industrial clients across Malaysia and abroad.
                 </p>
@@ -30,6 +42,7 @@ export default function AboutPage() {
                 <p>
                   We focus on clear communication from inquiry to delivery, with practical support for inspection, documentation, and transport planning. This keeps procurement and recycling workflows efficient for our clients.
                 </p>
+                </>}
                 <div className="pt-2 space-y-2 text-sm">
                   <Link href="/services" className="text-royal-blue hover:text-blue-700 font-medium block">See our full service capabilities</Link>
                   <Link href="/marketplace" className="text-royal-blue hover:text-blue-700 font-medium block">View current marketplace inventory</Link>
@@ -56,7 +69,7 @@ export default function AboutPage() {
               </div>
               <h2 className="text-2xl font-bold text-charcoal mb-4">Our Vision</h2>
               <p className="text-deep-grey leading-relaxed">
-                To become a leading regional supplier of heavy machinery and high-quality scrap metals, recognized for reliability, fairness, and sustainable trading practices.
+                {content?.vision || "To become a leading regional supplier of heavy machinery and high-quality scrap metals, recognized for reliability, fairness, and sustainable trading practices."}
               </p>
             </div>
 
@@ -67,22 +80,12 @@ export default function AboutPage() {
               </div>
               <h2 className="text-2xl font-bold text-charcoal mb-4">Our Mission</h2>
               <ul className="space-y-3 text-deep-grey">
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-royal-blue rounded-full mt-2 mr-3 flex-shrink-0" />
-                  To supply quality used machinery and spare parts at competitive prices.
-                </li>
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-royal-blue rounded-full mt-2 mr-3 flex-shrink-0" />
-                  To provide consistent and well-graded scrap metals for local and international buyers.
-                </li>
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-royal-blue rounded-full mt-2 mr-3 flex-shrink-0" />
-                  To build long-term relationships based on trust, transparency, and customer satisfaction.
-                </li>
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-royal-blue rounded-full mt-2 mr-3 flex-shrink-0" />
-                  To promote sustainable recycling practices.
-                </li>
+                {missionPoints.map((point, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="w-1.5 h-1.5 bg-royal-blue rounded-full mt-2 mr-3 flex-shrink-0" />
+                    {point}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>

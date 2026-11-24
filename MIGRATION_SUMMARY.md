@@ -2,7 +2,7 @@
 
 ## ✅ Successfully Migrated Content
 
-All hardcoded content has been migrated to Sanity CMS. Here's what was created:
+The following content documents were created in Sanity CMS. Here's what was created:
 
 ### 1. **Hero Section** (1 document)
 - Title: "Your Trusted Partner in Heavy Machinery & Scrap Metal"
@@ -57,15 +57,8 @@ You should now see all the new document types in the sidebar:
 - Services
 - Company Info
 
-### 2. Update Your Frontend Components
-Now that the data is in Sanity, you can update your components to fetch from Sanity instead of using hardcoded values.
-
-Example for fetching hero data:
-```typescript
-import { client } from '@/sanity/lib/client'
-
-const hero = await client.fetch(`*[_type == "hero"][0]`)
-```
+### 2. Frontend Connections
+The website now reads all public content schemas. See [Sanity content updates](README.md#sanity-content-updates) for field usage and the 60-second/hourly refresh intervals. Deploy the frontend update once, then publish subsequent edits in Studio.
 
 ### 3. Make Content Editable
 Content editors can now:

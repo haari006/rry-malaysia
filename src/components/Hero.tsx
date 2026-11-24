@@ -1,17 +1,20 @@
 'use client'
 
+import type { HeroContent } from '@/sanity/lib/content'
+import { urlFor } from '@/sanity/lib/image'
+import { safeContentHref } from '@/lib/content'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-export default function Hero() {
+export default function Hero({ content }: { content?: HeroContent | null }) {
   return (
     <section className="relative h-[90vh] flex items-center overflow-hidden bg-white">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/hero-bg.png"
+          src={content?.backgroundImage ? urlFor(content.backgroundImage).width(1920).url() : "/hero-bg.png"}
           alt="RRY Malaysia Hero Background"
           width={1920}
           height={1080}
@@ -29,24 +32,24 @@ export default function Hero() {
           className="max-w-4xl bg-white/60 backdrop-blur-xs p-8 md:p-12 rounded-3xl border border-white/40 shadow-xl"
         >
           <h1 className="text-5xl md:text-7xl font-bold text-charcoal mb-8 leading-tight tracking-tight">
-            Your Trusted Partner in <br />
-            <span className="text-royal-blue">Heavy Machinery</span> & <span className="text-royal-blue">Scrap Metal</span>
+            {content?.title || <>Your Trusted Partner in <br />
+            <span className="text-royal-blue">Heavy Machinery</span> & <span className="text-royal-blue">Scrap Metal</span></>}
           </h1>
           <p className="text-xl md:text-2xl text-deep-grey mb-10 leading-relaxed max-w-2xl font-light">
-            Reliable machinery, premium scrap materials, and trusted industry expertise — all under one roof.
+            {content?.subtitle || 'Reliable machinery, premium scrap materials, and trusted industry expertise — all under one roof.'}
           </p>
           <div className="flex flex-wrap gap-4">
             <Link
-              href="/services"
+              href={safeContentHref(content?.primaryButtonLink, "/services")}
               className="inline-flex items-center px-8 py-4 bg-royal-blue text-white rounded-full font-medium hover:bg-royal-blue-hover transition-all shadow-lg hover:shadow-royal-blue/20 transform hover:-translate-y-1 duration-200 text-lg"
             >
-              Explore Services <ArrowRight className="ml-2" size={20} />
+              {content?.primaryButtonText || 'Explore Services'} <ArrowRight className="ml-2" size={20} />
             </Link>
             <Link
-              href="/contact"
+              href={safeContentHref(content?.secondaryButtonLink, "/contact")}
               className="inline-flex items-center px-8 py-4 bg-white/80 backdrop-blur-sm text-royal-blue border border-white/50 rounded-full font-medium hover:bg-white transition-all shadow-sm hover:shadow-md text-lg"
             >
-              Contact Us
+              {content?.secondaryButtonText || 'Contact Us'}
             </Link>
           </div>
         </motion.div>

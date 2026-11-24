@@ -1,5 +1,7 @@
 'use client'
 
+import { useCompanyInfo } from '@/components/CompanyProvider'
+
 import { useCart } from '@/components/cart/CartProvider'
 import { buildWhatsAppLink, getProductInquiryMessage } from '@/lib/company'
 import { MessageCircle, ShoppingCart } from 'lucide-react'
@@ -22,9 +24,10 @@ export default function ProductActions({
   showViewDetails = false,
   fullWidth = false,
 }: ProductActionsProps) {
+  const company = useCompanyInfo()
   const { addItem, openCart } = useCart()
 
-  const whatsappLink = buildWhatsAppLink(getProductInquiryMessage(product.title, product.slug))
+  const whatsappLink = buildWhatsAppLink(getProductInquiryMessage(product.title, product.slug), company.whatsappNumber)
 
   const addToCart = () => {
     addItem({

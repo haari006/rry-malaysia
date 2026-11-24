@@ -1,7 +1,14 @@
+import ServiceDetails from '@/components/ServiceDetails'
+import { getServices, defaultServices } from '@/sanity/lib/content'
 import Link from 'next/link'
-import { CheckCircle, Recycle, Truck } from 'lucide-react'
+import { CheckCircle } from 'lucide-react'
 
-export default function ServicesPage() {
+export const revalidate = 3600
+
+export default async function ServicesPage() {
+  const published = await getServices()
+  const services = published.length ? published : defaultServices
+  const otherServices = services.filter(service => !['machinery', 'scrap'].includes(service.category || ''))
   return (
     <div className="bg-white min-h-screen">
       {/* Header */}
@@ -20,13 +27,7 @@ export default function ServicesPage() {
           <div className="flex flex-col md:flex-row gap-16">
             <div className="md:w-1/3">
               <div className="sticky top-24">
-                <div className="w-16 h-16 bg-royal-blue rounded-2xl flex items-center justify-center text-white mb-6">
-                  <Truck size={32} />
-                </div>
-                <h2 className="text-3xl font-bold text-charcoal mb-4">Heavy Machinery Trading</h2>
-                <p className="text-deep-grey mb-6">
-                  We specialize in sourcing, trading, and supplying a wide range of construction and earth-moving machines. We ensure proper inspection, fair pricing, and smooth delivery.
-                </p>
+                <ServiceDetails services={services.filter(service => service.category === "machinery")} />
                 <p className="text-deep-grey mb-6">
                   Our team supports contractors and fleet operators with equipment checks, sourcing options, and logistics planning to reduce project downtime.
                 </p>
@@ -68,13 +69,7 @@ export default function ServicesPage() {
           <div className="flex flex-col md:flex-row gap-16">
             <div className="md:w-1/3">
               <div className="sticky top-24">
-                <div className="w-16 h-16 bg-royal-blue rounded-2xl flex items-center justify-center text-white mb-6">
-                  <Recycle size={32} />
-                </div>
-                <h2 className="text-3xl font-bold text-charcoal mb-4">Scrap Metal Trading</h2>
-                <p className="text-deep-grey mb-6">
-                  We trade both ferrous and non-ferrous scrap metals, offering consistent grading and competitive pricing. We ensure accurate grading, clean materials, and fast logistics.
-                </p>
+                <ServiceDetails services={services.filter(service => service.category === "scrap")} />
                 <p className="text-deep-grey mb-6">
                   For regular suppliers, we provide repeat collection scheduling, transparent weighing, and clear grading notes so you can plan cash flow with confidence.
                 </p>
@@ -121,6 +116,12 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
+
+      {otherServices.length > 0 && (
+        <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ServiceDetails services={otherServices} />
+        </section>
+      )}
 
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
