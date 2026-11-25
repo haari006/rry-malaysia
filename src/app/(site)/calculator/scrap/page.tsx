@@ -1,3 +1,7 @@
+import { pageMetadata } from '@/lib/seo'
+
+export const metadata = pageMetadata('Scrap Metal Price Calculator', 'Estimate scrap metal value using published material rates. Enter your weight in kilograms or tonnes and request a confirmed quote from RRY Malaysia.', '/calculator/scrap')
+
 import ScrapCalculator from '@/components/ScrapCalculator'
 import { client } from '@/sanity/lib/client'
 import { getCompanyInfo } from '@/sanity/lib/content'

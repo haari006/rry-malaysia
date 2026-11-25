@@ -1,3 +1,7 @@
+import { pageMetadata } from '@/lib/seo'
+
+export const metadata = pageMetadata('Contact Us', 'Contact RRY Malaysia about heavy machinery, auto parts, scrap metal sales and sourcing. Find our current phone, WhatsApp and email details.', '/contact')
+
 import { Clock, Mail, MapPin, Phone } from 'lucide-react'
 import Link from 'next/link'
 import { getCompanyInfo } from '@/sanity/lib/content'
