@@ -1,54 +1,37 @@
-# FULL SEO AUDIT REPORT — rrymalaysia.com
+# SEO audit: rrymalaysia.com
 
-Date: 2026-03-06  
-Scope: Full-site audit (13 discovered URLs, depth-limited crawl)
+Scope: live homepage plus representative About, Services, Marketplace, Contact, calculator, legal, and product pages, checked 25 November 2026. The domain is `https://rrymalaysia.com`.
 
-## A) Audit Summary
-- Overall score: **70/100 (Good)** (from generated dashboard)
-- Score confidence: **Medium** (PageSpeed/CWV API rate-limited)
-- Top 3 issues:
-  1. Missing structured data (no JSON-LD schema found)
-  2. Thin content across most crawled pages (11/13 pages under 300 words)
-  3. Missing AI-search readiness files/signals (`/llms.txt` missing; AI bots not explicitly managed)
-- Top 3 opportunities:
-  1. Add Organization + WebSite JSON-LD with `sameAs`
-  2. Expand service/marketplace page content to intent-specific copy
-  3. Add missing security headers and tune robots policy for AI crawlers
+## Audit summary
 
-## B) Findings Table
+The site is crawlable and has a sitemap, semantic page headings, and image alt text. The main issue is repeated metadata: eight inspected URLs had the same title, description, canonical URL, and Open Graph URL. The canonical on every non-home page pointed to the homepage. Product structured data also claimed every listing was in stock without a source field, and sitemap dates used the time the sitemap was rendered rather than the content update time. These are confirmed from live HTML and the repository.
 
-| Area | Severity | Confidence | Finding | Evidence | Fix |
-|---|---|---|---|---|---|
-| Technical SEO | ✅ Pass | Confirmed | HTTPS and direct canonical homepage are in place | `security_headers.py`: HTTPS yes; `parse_html.py`: canonical `https://rrymalaysia.com` | Keep HTTPS canonical consistency site-wide |
-| On-Page SEO | ⚠️ Warning | Confirmed | Homepage content is thin | `parse_html.py` word count: 289; `duplicate_content.py`: homepage 282 words | Increase homepage to ~500-900 words with service/location trust details |
-| Content Quality | 🔴 Critical | Confirmed | Thin content on majority of crawled pages | `duplicate_content.py`: 11/13 pages below 300 words | Expand key pages (services, marketplace, calculator, about/contact) with unique buyer-intent content |
-| Schema | 🔴 Critical | Confirmed | No JSON-LD structured data detected | `parse_html.py`: `schema: []`; `entity_checker.py`: no Organization/Person entity | Add JSON-LD: `Organization`, `WebSite`, `BreadcrumbList`; product pages add `Product` where applicable |
-| E-E-A-T / Entity | ⚠️ Warning | Confirmed | Weak entity graph signals (`sameAs` missing) | `entity_checker.py`: no sameAs links (Wikipedia/Wikidata/LinkedIn/X) | Add `sameAs` to Organization schema for authoritative profiles |
-| Crawlability | ✅ Pass | Confirmed | robots.txt available and sitemap declared | `robots_checker.py`: `200`, sitemap found at `/sitemap.xml` | Keep sitemap fresh and auto-ping on updates |
-| AI Search Readiness (GEO) | ⚠️ Warning | Confirmed | `llms.txt` missing | `llms_txt_checker.py`: 404 not found | Create `/llms.txt` and optional `/llms-full.txt` with key page mappings |
-| AI Crawler Governance | ⚠️ Warning | Confirmed | AI crawlers not explicitly managed in robots policy | `robots_checker.py`: 11 AI crawlers inherit `*` rules | Add explicit blocks/allow rules for GPTBot, ClaudeBot, PerplexityBot, Google-Extended, etc. |
-| Security Headers | ⚠️ Warning | Confirmed | Critical headers missing (CSP, XFO, XCTO, Referrer-Policy, Permissions-Policy) | `security_headers.py`: score 45/100, 5 headers missing | Add headers at CDN/app edge; include `includeSubDomains` in HSTS |
-| Redirects | ✅ Pass | Confirmed | No redirect chain/loop on primary URL | `redirect_checker.py`: 0 hops, final 200 | Keep 1-hop max policy for all canonical URLs |
-| Links | ⚠️ Warning | Confirmed | Empty-anchor links and low-link pages exist | `internal_links.py`: 16 links with no anchor text; 1 page with <3 internal links | Ensure descriptive anchor text and minimum internal link count on key pages |
-| Broken Links | ✅ Pass | Confirmed | No broken links detected on scanned page set | `broken_links.py`: 0 broken, 4 redirected | Monitor redirects and replace with direct destination URLs where possible |
-| Social Metadata | ✅ Pass | Confirmed | OG/Twitter meta mostly complete | `social_meta.py`: 85/100, only optional fields missing | Optionally add `twitter:site` and `twitter:creator` |
-| International SEO | ℹ️ Info | Confirmed | No hreflang present | `hreflang_checker.py`: 0 tags | Keep as-is for single-language site; implement only if multilingual |
-| Performance / CWV | ℹ️ Info | Hypothesis | CWV could not be confirmed due API quota/rate limit | `pagespeed.py`: rate-limited by Google API | Re-run with API key and capture LCP/INP/CLS before performance prioritization |
+No ranking, traffic, or search penalty claim can be made without Search Console data. Mobile Core Web Vitals could not be measured because Google PageSpeed Insights rate limited the request. Score: insufficient data for a reliable overall numeric score.
 
-## C) Prioritized Action Plan (Execution Order)
-1. Add baseline JSON-LD (`Organization`, `WebSite`, `BreadcrumbList`) and entity `sameAs`.
-2. Create `/llms.txt` and explicit AI-bot `robots.txt` policy.
-3. Deploy missing security headers at server/CDN.
-4. Expand thin pages with unique, intent-matched content blocks.
-5. Improve internal anchors and add contextual links on low-link pages.
-6. Re-run PageSpeed with API key; optimize LCP/INP/CLS based on measured data.
+## Findings
 
-## D) Unknowns and Follow-ups
-- CWV metrics unknown due API rate-limiting (not a site failure).
-- No GSC/GA data was provided; indexing and CTR claims are out of scope.
-- Visual/mobile rendering checks were not executed with Playwright in this run.
+| Area | Severity | Confidence | Evidence and impact | Fix |
+| --- | --- | --- | --- | --- |
+| Canonical URLs | Critical | Confirmed | `/about`, `/services`, `/marketplace`, `/contact`, `/calculator/scrap`, `/privacy-policy`, and a product page all emitted `https://rrymalaysia.com` as canonical. Search engines may consolidate distinct pages into the homepage. | Emit a self-referencing canonical on every public page. |
+| Titles, descriptions, social previews | Warning | Confirmed | The same title, description, and Open Graph URL appeared across all eight inspected pages. This obscures each page's topic in search and link previews. | Set unique metadata by route; generate product metadata from published Sanity data. |
+| Product structured data | Warning | Confirmed | Product schema unconditionally declared `InStock` even though the product schema has no availability field; products without a price still emitted an Offer. | Remove unsupported availability claims and emit an Offer only for a valid positive price. |
+| Sitemap freshness | Warning | Confirmed | Static and product URLs used `new Date()` at sitemap generation as `lastModified`, despite no corresponding content update. | Omit unverified dates for static routes and use Sanity `_updatedAt` for products. |
+| WebSite structured data | Warning | Confirmed | `SearchAction` pointed to `/marketplace` without any search query parameter or working search behavior. A root breadcrumb list described several sibling pages as one hierarchy. | Remove unsupported search action and global breadcrumb list. Preserve actual product breadcrumb hierarchy. |
+| Crawlability | Pass | Confirmed | `robots.txt` returns 200, allows public pages, and names `/sitemap.xml`; the homepage returns 200 without redirects. | Keep this behavior. |
+| On-page structure | Pass | Confirmed | The inspected homepage has one H1, descriptive section headings, internal links, and alt text on listed images. | Keep this behavior; improve page-specific copy over time. |
+| Mobile performance | Info | Unknown | PageSpeed Insights returned a rate-limit error and no mobile metrics. | Check Core Web Vitals in Search Console or retry PageSpeed later. |
+| Local business data | Warning | Confirmed | Published Sanity Company Info currently contains `Kuala Lumpur, Malaysia`, `contact@rrymalaysia.com`, and `+60 12-345 6789`, which differ from previous hardcoded company details. Incorrect NAP data can confuse visitors and local listings. | Have the business owner verify and correct the Sanity record, then align its Google Business Profile and citations. |
 
-## Environment Limitations
-- `pagespeed.py` failed due Google API rate limit.
-- Remaining checks completed successfully.
+## Prioritized action plan
 
+1. Fix canonical URLs and route-specific metadata (quick win; implemented in this branch).
+2. Correct product schema and sitemap update dates (quick win; implemented in this branch).
+3. Verify the published business name, address, and phone with the owner, then update Sanity and external listings (strategic).
+4. Review Search Console indexing, query and click data after deployment; submit the sitemap if needed (strategic).
+5. Measure mobile Core Web Vitals and target actual bottlenecks (maintenance).
+
+## Unknowns and follow-ups
+
+Search Console access and Google Business Profile ownership were not available in this audit. No competitive keyword or backlink analysis was performed. PageSpeed Insights was rate limited, so performance impact remains unmeasured. The sitemap refreshes after requests; search engines still determine when to recrawl and update results.
+
+Evidence: direct live HTML requests, the SEO skill's fetch/parse, robots and redirect scripts, and repository source. Google guidance: https://developers.google.com/search/docs/fundamentals/seo-starter-guide and https://developers.google.com/search/docs/specialty/ecommerce/designing-a-url-structure-for-ecommerce-sites.

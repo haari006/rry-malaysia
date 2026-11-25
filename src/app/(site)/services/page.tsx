@@ -1,3 +1,7 @@
+import { pageMetadata } from '@/lib/seo'
+
+export const metadata = pageMetadata('Heavy Machinery & Scrap Metal Services', 'Explore heavy machinery sourcing, used parts and scrap metal trading services from RRY Malaysia. Ask our team about availability and delivery.', '/services')
+
 import ServiceDetails from '@/components/ServiceDetails'
 import { getServices, defaultServices } from '@/sanity/lib/content'
 import Link from 'next/link'

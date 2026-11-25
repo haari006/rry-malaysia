@@ -1,3 +1,7 @@
+import { pageMetadata } from '@/lib/seo'
+
+export const metadata = pageMetadata('Privacy Policy', 'Read how RRY Malaysia handles information submitted through our website, marketplace and contact channels.', '/privacy-policy')
+
 import { getCompanyInfo } from '@/sanity/lib/content'
 
 export const revalidate = 3600

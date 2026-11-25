@@ -1,3 +1,7 @@
+import { pageMetadata } from '@/lib/seo'
+
+export const metadata = pageMetadata('Used Machinery, Parts & Scrap Marketplace', 'Browse used heavy machinery, auto parts and scrap metal listings in Malaysia. View product details and contact RRY Malaysia for current availability.', '/marketplace')
+
 import ProductActions from '@/components/product/ProductActions'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'

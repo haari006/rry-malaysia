@@ -61,3 +61,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Search metadata
+
+Each public page has a self-referencing canonical URL, distinct title and description, and matching social preview metadata. Product metadata and sitemap modification dates follow published Sanity content. Keep company contact details in Sanity accurate so on-page and structured data remain trustworthy. The SEO audit and follow-up work are in `FULL-AUDIT-REPORT.md` and `ACTION-PLAN.md`.

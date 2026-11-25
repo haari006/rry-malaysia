@@ -1,3 +1,7 @@
+import { pageMetadata } from '@/lib/seo'
+
+export const metadata = pageMetadata('Terms of Service', 'Read RRY Malaysia’s terms for website use, product inquiries and machinery or scrap metal trading.', '/terms-of-service')
+
 import { getCompanyInfo } from '@/sanity/lib/content'
 
 export const revalidate = 3600

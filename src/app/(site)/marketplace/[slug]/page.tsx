@@ -1,3 +1,5 @@
+import { pageMetadata, SITE_URL } from '@/lib/seo'
+import type { Metadata } from 'next'
 import ProductActions from '@/components/product/ProductActions'
 import { getCompanyInfo } from '@/sanity/lib/content'
 import { serializeJsonLd } from '@/lib/content'
@@ -13,7 +15,7 @@ interface Product {
   _id: string
   title: string
   slug: string
-  mainImage: any
+  mainImage: import('@sanity/image-url/lib/types/types').SanityImageSource | null
   price?: number
   description?: string
   categories?: string[]
@@ -37,7 +39,23 @@ async function getProduct(slug: string): Promise<Product | null> {
   )
 }
 
-export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+type ProductPageProps = { params: Promise<{ slug: string }> }
+
+function productDescription(product: Product): string {
+  return product.description?.trim() ||
+    `${product.title} available from RRY Malaysia. Contact our team for current availability, condition notes, and delivery support in Malaysia.`
+}
+
+export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+  const { slug } = await params
+  const product = await getProduct(slug)
+  if (!product) return { title: 'Product not found', robots: { index: false, follow: false } }
+  const description = productDescription(product)
+  const image = product.mainImage ? urlFor(product.mainImage).width(1200).height(630).url() : undefined
+  return pageMetadata(product.title, description.slice(0, 160), `/marketplace/${product.slug}`, image)
+}
+
+export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params
   const [product, company] = await Promise.all([getProduct(slug), getCompanyInfo()])
 
@@ -45,35 +63,30 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     notFound()
   }
 
-  const productUrl = `https://rrymalaysia.com/marketplace/${product.slug}`
-  const normalizedDescription =
-    product.description ||
-    `${product.title} available from RRY Malaysia. Contact our team for current availability, condition notes, and delivery support in Malaysia.`
+  const productUrl = `${SITE_URL}/marketplace/${product.slug}`
+  const normalizedDescription = productDescription(product)
 
   const productSchema = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.title,
     description: normalizedDescription,
-    image: product.mainImage ? [urlFor(product.mainImage).url()] : ['https://rrymalaysia.com/logo.png'],
+    ...(product.mainImage ? { image: [urlFor(product.mainImage).url()] } : {}),
     sku: product._id,
     brand: {
       '@type': 'Organization',
       name: company.name,
     },
     category: product.categories?.join(', '),
-    offers: {
-      '@type': 'Offer',
-      url: productUrl,
-      priceCurrency: 'MYR',
-      availability: 'https://schema.org/InStock',
-      seller: {
-        '@type': 'Organization',
-        name: company.name,
-        telephone: company.phone,
+    ...(typeof product.price === 'number' && Number.isFinite(product.price) && product.price > 0 ? {
+      offers: {
+        '@type': 'Offer',
+        url: productUrl,
+        priceCurrency: 'MYR',
+        price: product.price,
+        seller: { '@type': 'Organization', name: company.name, telephone: company.phone },
       },
-      ...(product.price ? { price: product.price } : {}),
-    },
+    } : {}),
   }
 
   const breadcrumbSchema = {

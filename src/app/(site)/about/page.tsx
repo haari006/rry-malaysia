@@ -1,3 +1,7 @@
+import { pageMetadata } from '@/lib/seo'
+
+export const metadata = pageMetadata('About Us', 'Learn about RRY Malaysia, our machinery sourcing and scrap metal trading services, and our approach to reliable industrial supply in Malaysia.', '/about')
+
 import ContentRichText from '@/components/ContentRichText'
 import { getAboutContent } from '@/sanity/lib/content'
 import { Eye, Target, Users } from 'lucide-react'

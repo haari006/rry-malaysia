@@ -1,3 +1,7 @@
+import { pageMetadata } from '@/lib/seo'
+
+export const metadata = pageMetadata('Recycling Carbon Calculator', 'Estimate the environmental impact of recycling scrap metal with RRY Malaysia’s carbon calculator.', '/calculator/carbon')
+
 import CarbonCalculator from '@/components/CarbonCalculator'
 
 export default function CarbonCalculatorPage() {
